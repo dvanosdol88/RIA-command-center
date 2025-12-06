@@ -1,0 +1,5 @@
+{
+  "name": "RIA Command Center",
+  "description": "A React-based decision matrix for Vendor Intelligence with persistent storage and Gemini AI integration for strategic analysis.",
+  "requestFramePermissions": []
+}
