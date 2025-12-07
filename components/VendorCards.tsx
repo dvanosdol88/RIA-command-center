@@ -59,8 +59,8 @@ const VendorCards: React.FC<VendorCardsProps> = ({ results, weights, onSelectVen
                 key={vendor.name}
                 onClick={() => onSelectVendor(vendor)}
                 className={`bg-slate-800 border rounded-lg p-6 relative group transition-all duration-300 hover:scale-[1.01] hover:shadow-xl cursor-pointer ${isWinner
-                    ? 'border-emerald-500 shadow-lg shadow-emerald-900/20'
-                    : 'border-slate-700 hover:border-blue-500'
+                  ? 'border-emerald-500 shadow-lg shadow-emerald-900/20'
+                  : 'border-slate-700 hover:border-blue-500'
                   }`}
               >
                 {isWinner ? (
@@ -78,7 +78,7 @@ const VendorCards: React.FC<VendorCardsProps> = ({ results, weights, onSelectVen
 
                   {/* Left Column: Content */}
                   <div className="flex flex-col">
-                    <h3 className="text-3xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">{vendor.name}</h3>
+                    <h3 className="text-4xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">{vendor.name}</h3>
                     <div className="text-2xl font-bold text-blue-400 mb-4">
                       {vendor.finalScore} <span className="text-xs text-slate-500 font-normal">/ 10</span>
                     </div>
