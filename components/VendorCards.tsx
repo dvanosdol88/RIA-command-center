@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { VendorResult, WeightState } from '../types';
 import { NARRATIVES } from '../constants';
-import { Check, X, Award, ChevronRight, ZoomIn, XIcon } from 'lucide-react';
+import { Check, X, Award, ChevronRight, ZoomIn, XIcon, Settings } from 'lucide-react';
+import ImageUploader from './ImageUploader';
 
 interface VendorCardsProps {
   results: VendorResult[];
@@ -32,17 +33,112 @@ const ImageModal: React.FC<{ src: string; alt: string; onClose: () => void }> = 
   );
 };
 
-// Vendor screenshot mapping
+// Image Management Modal
+const ImageManagementModal: React.FC<{
+  vendorName: string;
+  onClose: () => void;
+  onUpdate: () => void;
+}> = ({ vendorName, onClose, onUpdate }) => {
+  const [frontImages, setFrontImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    // Load existing images from localStorage
+    const storageKey = `vendor_images_${vendorName}_front`;
+    const saved = localStorage.getItem(storageKey);
+    if (saved) {
+      try {
+        setFrontImages(JSON.parse(saved));
+      } catch (e) {
+        console.error('Failed to parse saved images');
+      }
+    }
+  }, [vendorName]);
+
+  const handleUpdate = (images: string[]) => {
+    setFrontImages(images);
+    onUpdate();
+  };
+
+  return (
+    <div
+      className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-8 animate-fade-in"
+      onClick={onClose}
+    >
+      <div
+        className="bg-slate-800 rounded-lg border border-slate-700 p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-xl font-bold text-white">Manage {vendorName} Images</h3>
+          <button
+            onClick={onClose}
+            className="text-slate-400 hover:text-white transition"
+          >
+            <XIcon size={24} />
+          </button>
+        </div>
+
+        <div className="space-y-6">
+          <div>
+            <h4 className="text-sm font-bold text-blue-400 mb-3">Card Screenshot (Front)</h4>
+            <ImageUploader
+              vendorName={vendorName}
+              location="front"
+              currentImages={frontImages}
+              onImagesUpdate={handleUpdate}
+            />
+          </div>
+        </div>
+
+        <div className="mt-6 flex justify-end">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded transition"
+          >
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Load images from localStorage
+const loadVendorImages = (vendorName: string, location: 'front' | 'back'): string[] => {
+  const storageKey = `vendor_images_${vendorName}_${location}`;
+  const saved = localStorage.getItem(storageKey);
+  if (saved) {
+    try {
+      return JSON.parse(saved);
+    } catch (e) {
+      console.error('Failed to parse saved images');
+    }
+  }
+  return [];
+};
+
+// Vendor screenshot mapping (default screenshots)
 const VENDOR_SCREENSHOTS: Record<string, string> = {
   "RightCapital": "/uploaded_image_1765143260406.png"
 };
 
 const VendorCards: React.FC<VendorCardsProps> = ({ results, weights, onSelectVendor }) => {
   const [enlargedImage, setEnlargedImage] = useState<{ src: string; alt: string } | null>(null);
+  const [managingVendor, setManagingVendor] = useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleImageClick = (e: React.MouseEvent, src: string, alt: string) => {
     e.stopPropagation();
     setEnlargedImage({ src, alt });
+  };
+
+  const handleManageImages = (e: React.MouseEvent, vendorName: string) => {
+    e.stopPropagation();
+    setManagingVendor(vendorName);
+  };
+
+  const handleUpdateComplete = () => {
+    setRefreshKey(prev => prev + 1);
   };
 
   return (
@@ -52,15 +148,18 @@ const VendorCards: React.FC<VendorCardsProps> = ({ results, weights, onSelectVen
           {results.map((vendor, index) => {
             const narrative = NARRATIVES[vendor.name];
             const isWinner = index === 0;
-            const screenshot = VENDOR_SCREENSHOTS[vendor.name];
+
+            // Get custom images or default screenshot
+            const customImages = loadVendorImages(vendor.name, 'front');
+            const screenshot = customImages.length > 0 ? customImages[0] : VENDOR_SCREENSHOTS[vendor.name];
 
             return (
               <div
-                key={vendor.name}
+                key={`${vendor.name}-${refreshKey}`}
                 onClick={() => onSelectVendor(vendor)}
                 className={`bg-slate-800 border rounded-lg p-6 relative group transition-all duration-300 hover:scale-[1.01] hover:shadow-xl cursor-pointer ${isWinner
-                  ? 'border-emerald-500 shadow-lg shadow-emerald-900/20'
-                  : 'border-slate-700 hover:border-blue-500'
+                    ? 'border-emerald-500 shadow-lg shadow-emerald-900/20'
+                    : 'border-slate-700 hover:border-blue-500'
                   }`}
               >
                 {isWinner ? (
@@ -115,7 +214,16 @@ const VendorCards: React.FC<VendorCardsProps> = ({ results, weights, onSelectVen
                   </div>
 
                   {/* Right Column: Screenshot Space */}
-                  <div className="flex flex-col justify-center items-center">
+                  <div className="flex flex-col justify-center items-center relative">
+                    {/* Manage Images Button */}
+                    <button
+                      onClick={(e) => handleManageImages(e, vendor.name)}
+                      className="absolute top-2 right-2 z-20 bg-slate-700 hover:bg-slate-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      title="Manage Images"
+                    >
+                      <Settings size={16} />
+                    </button>
+
                     {screenshot ? (
                       <div
                         className="relative w-full h-full min-h-[300px] bg-slate-900/50 rounded-lg border-2 border-slate-700 overflow-hidden group/img cursor-zoom-in"
@@ -131,10 +239,14 @@ const VendorCards: React.FC<VendorCardsProps> = ({ results, weights, onSelectVen
                         </div>
                       </div>
                     ) : (
-                      <div className="w-full h-full min-h-[300px] bg-slate-900/50 rounded-lg border-2 border-dashed border-slate-700 flex items-center justify-center">
+                      <div
+                        className="w-full h-full min-h-[300px] bg-slate-900/50 rounded-lg border-2 border-dashed border-slate-700 flex items-center justify-center cursor-pointer hover:border-slate-600 transition"
+                        onClick={(e) => handleManageImages(e, vendor.name)}
+                      >
                         <div className="text-center text-slate-600">
-                          <div className="text-sm font-medium mb-1">Screenshot</div>
-                          <div className="text-xs">Coming Soon</div>
+                          <Settings className="mx-auto mb-2" size={24} />
+                          <div className="text-sm font-medium mb-1">Add Screenshot</div>
+                          <div className="text-xs">Click to upload</div>
                         </div>
                       </div>
                     )}
@@ -160,6 +272,15 @@ const VendorCards: React.FC<VendorCardsProps> = ({ results, weights, onSelectVen
           src={enlargedImage.src}
           alt={enlargedImage.alt}
           onClose={() => setEnlargedImage(null)}
+        />
+      )}
+
+      {/* Image Management Modal */}
+      {managingVendor && (
+        <ImageManagementModal
+          vendorName={managingVendor}
+          onClose={() => setManagingVendor(null)}
+          onUpdate={handleUpdateComplete}
         />
       )}
     </>

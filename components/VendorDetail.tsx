@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { VendorResult, WeightState } from '../types';
 import { NARRATIVES, CATEGORIES } from '../constants';
-import { ArrowLeft, Save, Sparkles, Check, X, Loader2, ZoomIn, XIcon } from 'lucide-react';
+import { ArrowLeft, Save, Sparkles, Check, X, Loader2, ZoomIn, XIcon, Settings } from 'lucide-react';
 import { getVendorInsight } from '../services/geminiService';
+import ImageUploader from './ImageUploader';
 
 interface VendorDetailProps {
     vendor: VendorResult;
@@ -34,7 +35,21 @@ const ImageModal: React.FC<{ src: string; alt: string; onClose: () => void }> = 
     );
 };
 
-// Vendor screenshot mapping
+// Load images from localStorage
+const loadVendorImages = (vendorName: string, location: 'front' | 'back'): string[] => {
+    const storageKey = `vendor_images_${vendorName}_${location}`;
+    const saved = localStorage.getItem(storageKey);
+    if (saved) {
+        try {
+            return JSON.parse(saved);
+        } catch (e) {
+            console.error('Failed to parse saved images');
+        }
+    }
+    return [];
+};
+
+// Vendor screenshot mapping (default screenshots)
 const VENDOR_SCREENSHOTS: Record<string, string[]> = {
     "RightCapital": ["/uploaded_image_1765143260406.png"]
 };
@@ -54,6 +69,16 @@ const VendorDetail: React.FC<VendorDetailProps> = ({ vendor, weights, onBack }) 
 
     // Image Modal State
     const [enlargedImage, setEnlargedImage] = useState<{ src: string; alt: string } | null>(null);
+
+    // Image Management State
+    const [showImageManager, setShowImageManager] = useState(false);
+    const [backImages, setBackImages] = useState<string[]>([]);
+    const [refreshKey, setRefreshKey] = useState(0);
+
+    useEffect(() => {
+        // Load back images
+        setBackImages(loadVendorImages(vendor.name, 'back'));
+    }, [vendor.name, refreshKey]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -78,7 +103,14 @@ const VendorDetail: React.FC<VendorDetailProps> = ({ vendor, weights, onBack }) 
         setEnlargedImage({ src, alt });
     };
 
-    const screenshots = VENDOR_SCREENSHOTS[vendor.name] || [];
+    const handleUpdateImages = (images: string[]) => {
+        setBackImages(images);
+        setRefreshKey(prev => prev + 1);
+    };
+
+    // Combine default and custom screenshots
+    const defaultScreenshots = VENDOR_SCREENSHOTS[vendor.name] || [];
+    const allScreenshots = [...defaultScreenshots, ...backImages];
 
     return (
         <>
@@ -109,13 +141,37 @@ const VendorDetail: React.FC<VendorDetailProps> = ({ vendor, weights, onBack }) 
                     <div className="max-w-5xl mx-auto space-y-8">
 
                         {/* Screenshot Gallery */}
-                        {screenshots.length > 0 && (
-                            <div className="bg-slate-800/50 border border-slate-700 p-6 rounded-lg">
-                                <h3 className="text-xs uppercase font-bold text-blue-400 mb-4">Screenshots & Visuals</h3>
+                        <div className="bg-slate-800/50 border border-slate-700 p-6 rounded-lg">
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-xs uppercase font-bold text-blue-400">Screenshots & Visuals</h3>
+                                <button
+                                    onClick={() => setShowImageManager(!showImageManager)}
+                                    className="flex items-center gap-2 text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded transition"
+                                >
+                                    <Settings size={14} />
+                                    {showImageManager ? 'Hide Manager' : 'Manage Images'}
+                                </button>
+                            </div>
+
+                            {/* Image Upload Manager */}
+                            {showImageManager && (
+                                <div className="mb-6 p-4 bg-slate-900/50 rounded-lg border border-slate-700">
+                                    <h4 className="text-sm font-bold text-slate-300 mb-3">Add Additional Screenshots</h4>
+                                    <ImageUploader
+                                        vendorName={vendor.name}
+                                        location="back"
+                                        currentImages={backImages}
+                                        onImagesUpdate={handleUpdateImages}
+                                    />
+                                </div>
+                            )}
+
+                            {/* Screenshot Grid */}
+                            {allScreenshots.length > 0 ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {screenshots.map((screenshot, index) => (
+                                    {allScreenshots.map((screenshot, index) => (
                                         <div
-                                            key={index}
+                                            key={`${index}-${refreshKey}`}
                                             className="relative aspect-video bg-slate-900/50 rounded-lg border-2 border-slate-700 overflow-hidden group cursor-zoom-in"
                                             onClick={() => handleImageClick(screenshot, `${vendor.name} Screenshot ${index + 1}`)}
                                         >
@@ -130,8 +186,13 @@ const VendorDetail: React.FC<VendorDetailProps> = ({ vendor, weights, onBack }) 
                                         </div>
                                     ))}
                                 </div>
-                            </div>
-                        )}
+                            ) : (
+                                <div className="text-center text-slate-600 py-8">
+                                    <Settings className="mx-auto mb-2" size={32} />
+                                    <div className="text-sm">No screenshots yet. Click "Manage Images" to add some.</div>
+                                </div>
+                            )}
+                        </div>
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
