@@ -9,13 +9,15 @@ import DependencyMap from './components/DependencyMap';
 import ResearchView from './components/ResearchView';
 import MiniAppsView from './components/MiniAppsView';
 import ChatWidget from './components/ChatWidget';
-import { LayoutGrid, BarChart2, Table, Network, Save, Layers } from 'lucide-react';
+import { LayoutGrid, BarChart2, Table, Network, Save, Layers, Sun, Moon } from 'lucide-react';
 import { addItem, subscribeToItems } from './services/db';
 import { vendorAPI } from './services/apiService';
+import { useTheme } from './src/context/ThemeContext';
 
 type ModuleState = 'vendors' | 'research' | 'miniapps';
 
 const App: React.FC = () => {
+  const { theme, toggleTheme } = useTheme();
   const [activeModule, setActiveModule] = useState<ModuleState>('vendors');
   const [activeVendorView, setActiveVendorView] = useState<ViewState>('cards');
   const [selectedVendorName, setSelectedVendorName] = useState<string | null>(null);
@@ -147,7 +149,7 @@ const App: React.FC = () => {
       onClick={() => setActiveModule(id)}
       className={`px-4 py-1.5 rounded-md font-bold text-sm transition-all ${activeModule === id
         ? 'bg-evergreen text-white shadow-lg shadow-evergreen/50'
-        : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+        : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
         }`}
     >
       {label}
@@ -161,8 +163,8 @@ const App: React.FC = () => {
         setSelectedVendorName(null); // Clear detail view when switching main views
       }}
       className={`flex flex-col items-center gap-1.5 p-3 rounded-lg transition-all w-16 group relative ${activeVendorView === id && !selectedVendorName
-        ? 'text-accent-gold bg-slate-800 shadow-[inset_3px_0_0_0_#af8a49]'
-        : 'text-slate-500 hover:text-slate-200 hover:bg-slate-800'
+        ? 'text-accent-gold bg-slate-200 dark:bg-slate-800 shadow-[inset_3px_0_0_0_#af8a49]'
+        : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800'
         }`}
       title={label}
     >
@@ -172,17 +174,17 @@ const App: React.FC = () => {
   );
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-slate-900 text-slate-200">
+    <div className="h-screen flex flex-col overflow-hidden bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-200 transition-colors duration-300">
 
       {/* Header */}
-      <header className="bg-slate-900 border-b border-slate-700 p-4 flex justify-between items-center shadow-lg z-20 shrink-0">
+      <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 p-4 flex justify-between items-center shadow-lg z-20 shrink-0 transition-colors duration-300">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-gradient-to-br from-evergreen-light to-evergreen rounded flex items-center justify-center font-bold text-white shadow">
             R
           </div>
           <div>
-            <h1 className="text-lg font-heading font-extrabold tracking-wide text-white">RIA COMMAND CENTER</h1>
-            <div className="text-[10px] uppercase tracking-widest text-slate-400 flex items-center gap-2">
+            <h1 className="text-lg font-heading font-extrabold tracking-wide text-slate-900 dark:text-white">RIA COMMAND CENTER</h1>
+            <div className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 flex items-center gap-2">
               Vendor Intelligence Module
               {saveStatus === 'saved' && (
                 <span className="text-accent-green flex items-center gap-1 animate-fade-in">
@@ -193,11 +195,20 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        <nav className="flex gap-1 bg-slate-950/50 p-1 rounded-lg border border-slate-800">
-          <TopNavButton id="vendors" label="Vendors" />
-          <TopNavButton id="research" label="AI Research" />
-          <TopNavButton id="miniapps" label="mini-apps & infographics" />
-        </nav>
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={toggleTheme}
+            className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors"
+          >
+            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+          
+          <nav className="flex gap-1 bg-slate-100 dark:bg-slate-950/50 p-1 rounded-lg border border-slate-200 dark:border-slate-800">
+            <TopNavButton id="vendors" label="Vendors" />
+            <TopNavButton id="research" label="AI Research" />
+            <TopNavButton id="miniapps" label="mini-apps & infographics" />
+          </nav>
+        </div>
       </header>
 
       {/* Main Container */}
@@ -207,7 +218,7 @@ const App: React.FC = () => {
         {activeModule === 'vendors' && (
           <>
             {/* View Content */}
-            <main className="flex-1 overflow-hidden relative bg-slate-900/50">
+            <main className="flex-1 overflow-hidden relative bg-slate-50 dark:bg-slate-900/50 transition-colors duration-300">
 
               {selectedVendor ? (
                 <VendorDetail
@@ -245,8 +256,8 @@ const App: React.FC = () => {
             </main>
 
             {/* Right Sidebar Sub-navigation */}
-            <aside className="w-20 bg-slate-950 border-l border-slate-800 flex flex-col items-center py-6 gap-2 z-20 shadow-xl">
-              <div className="text-[10px] uppercase text-slate-600 font-bold mb-2 tracking-widest rotate-180 [writing-mode:vertical-rl] opacity-50">Views</div>
+            <aside className="w-20 bg-white dark:bg-slate-950 border-l border-slate-200 dark:border-slate-800 flex flex-col items-center py-6 gap-2 z-20 shadow-xl transition-colors duration-300">
+              <div className="text-[10px] uppercase text-slate-400 dark:text-slate-600 font-bold mb-2 tracking-widest rotate-180 [writing-mode:vertical-rl] opacity-50">Views</div>
               <SubNavButton id="dashboard" label="Model" icon={LayoutGrid} />
               <SubNavButton id="cards" label="Cards" icon={BarChart2} />
               <SubNavButton id="matrix" label="Matrix" icon={Table} />

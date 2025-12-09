@@ -17,7 +17,7 @@ import {
 // --- Components ---
 
 const Card = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
-  <div className={`bg-slate-800 rounded-xl shadow-lg border border-slate-700 ${className}`}>
+  <div className={`bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 transition-colors duration-300 ${className}`}>
     {children}
   </div>
 );
@@ -34,8 +34,8 @@ const InputGroup = ({ label, value, onChange, min = 0, max, step = 1, suffix = "
 }) => (
   <div className="mb-6 last:mb-0">
     <div className="flex justify-between items-end mb-2">
-      <label className="text-xs font-medium text-slate-400 uppercase tracking-wider">{label}</label>
-      <span className="text-xl font-bold text-cyan-400 leading-none">{value}{suffix}</span>
+      <label className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{label}</label>
+      <span className="text-xl font-bold text-cyan-600 dark:text-cyan-400 leading-none">{value}{suffix}</span>
     </div>
     <input
       type="range"
@@ -44,9 +44,9 @@ const InputGroup = ({ label, value, onChange, min = 0, max, step = 1, suffix = "
       step={step}
       value={value}
       onChange={(e) => onChange(parseFloat(e.target.value))}
-      className="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-300 block"
+      className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-600 dark:accent-cyan-400 hover:accent-cyan-500 dark:hover:accent-cyan-300 block"
     />
-    <div className="flex justify-between text-[10px] text-slate-500 mt-2 font-medium">
+    <div className="flex justify-between text-[10px] text-slate-400 dark:text-slate-500 mt-2 font-medium">
       {customScale ? (
         customScale.map((scaleVal, idx) => (
           <span key={idx}>{scaleVal}</span>
@@ -69,12 +69,16 @@ const StatBox = ({ label, value, subtext, highlight = false, valueSize = "text-2
   highlight?: boolean;
   valueSize?: string;
 }) => (
-  <div className={`px-4 py-3 rounded-lg border ${highlight ? 'bg-cyan-950/30 border-cyan-500/30' : 'bg-slate-800/50 border-slate-700'}`}>
-    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">{label}</div>
-    <div className={`${valueSize} font-bold leading-tight ${highlight ? 'text-cyan-400' : 'text-slate-200'}`}>
+  <div className={`px-4 py-3 rounded-lg border transition-colors duration-300 ${
+      highlight 
+      ? 'bg-cyan-50 dark:bg-cyan-950/30 border-cyan-200 dark:border-cyan-500/30' 
+      : 'bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700'
+  }`}>
+    <div className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">{label}</div>
+    <div className={`${valueSize} font-bold leading-tight ${highlight ? 'text-cyan-600 dark:text-cyan-400' : 'text-slate-900 dark:text-slate-200'}`}>
       {value}
     </div>
-    {subtext && <div className="text-[10px] text-slate-400 mt-1">{subtext}</div>}
+    {subtext && <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">{subtext}</div>}
   </div>
 );
 
@@ -234,20 +238,20 @@ const CapacityCalculator: React.FC = () => {
 
     return (
       <div>
-        <h3 className="text-sm font-bold text-slate-300 flex items-center justify-center gap-2 mb-4">
-          <Calendar className="w-4 h-4 text-cyan-400" /> Representative Week Load
+        <h3 className="text-sm font-bold text-slate-400 dark:text-slate-300 flex items-center justify-center gap-2 mb-4">
+          <Calendar className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Representative Week Load
         </h3>
         
         {/* Dropdown Controls */}
         <div className="flex justify-center items-center mb-6">
-          <div className="flex gap-4 text-sm font-semibold text-slate-300 bg-slate-800 px-4 py-2 rounded-lg border border-slate-700">
+          <div className="flex gap-4 text-sm font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700">
             <div className="flex items-center gap-2">
               <label className="text-[10px] text-slate-500 uppercase tracking-wide">Start</label>
               <div className="relative">
                 <select 
                   value={inputs.startHour}
                   onChange={(e) => updateInput('startHour', parseFloat(e.target.value))}
-                  className="appearance-none bg-slate-900 border border-slate-600 rounded px-2 py-1 pr-6 focus:outline-none focus:ring-1 focus:ring-cyan-500 cursor-pointer text-xs text-slate-200"
+                  className="appearance-none bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded px-2 py-1 pr-6 focus:outline-none focus:ring-1 focus:ring-cyan-500 cursor-pointer text-xs text-slate-700 dark:text-slate-200"
                 >
                   {startTimeOptions.map(t => (
                     <option key={t} value={t}>{formatTime(t)}</option>
@@ -256,14 +260,14 @@ const CapacityCalculator: React.FC = () => {
                 <ChevronDown className="w-3 h-3 absolute right-1.5 top-2 text-slate-500 pointer-events-none" />
               </div>
             </div>
-            <div className="w-px bg-slate-700"></div>
+            <div className="w-px bg-slate-200 dark:bg-slate-700"></div>
             <div className="flex items-center gap-2">
               <label className="text-[10px] text-slate-500 uppercase tracking-wide">End</label>
               <div className="relative">
                  <select 
                   value={inputs.endHour}
                   onChange={(e) => updateInput('endHour', parseFloat(e.target.value))}
-                  className="appearance-none bg-slate-900 border border-slate-600 rounded px-2 py-1 pr-6 focus:outline-none focus:ring-1 focus:ring-cyan-500 cursor-pointer text-xs text-slate-200"
+                  className="appearance-none bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded px-2 py-1 pr-6 focus:outline-none focus:ring-1 focus:ring-cyan-500 cursor-pointer text-xs text-slate-700 dark:text-slate-200"
                 >
                   {endTimeOptions.map(t => (
                     <option key={t} value={t}>{formatTime(t)}</option>
@@ -278,10 +282,10 @@ const CapacityCalculator: React.FC = () => {
         <div className="flex gap-2">
           {/* Time Labels Sidebar */}
           <div className="flex flex-col justify-between pt-6 pb-0 w-12 flex-shrink-0 relative" style={{ height: `${totalContainerHeight + 25}px` }}>
-             <div className="text-[10px] text-right pr-2 text-slate-500 font-bold -mt-2">
+             <div className="text-[10px] text-right pr-2 text-slate-400 dark:text-slate-500 font-bold -mt-2">
                 {formatTime(inputs.startHour)}
               </div>
-              <div className="text-[10px] text-right pr-2 text-slate-500 font-bold -mb-2">
+              <div className="text-[10px] text-right pr-2 text-slate-400 dark:text-slate-500 font-bold -mb-2">
                 {formatTime(inputs.endHour)}
               </div>
           </div>
@@ -290,7 +294,7 @@ const CapacityCalculator: React.FC = () => {
           <div className="flex-1">
             <div className="grid grid-cols-6 gap-1 mb-1 pl-1">
                 {daysToShow.map((day, idx) => (
-                  <div key={day} className={`text-[10px] text-center font-medium ${idx >= inputs.workDaysPerWeek ? 'text-slate-600' : 'text-slate-400'}`}>
+                  <div key={day} className={`text-[10px] text-center font-medium ${idx >= inputs.workDaysPerWeek ? 'text-slate-400 dark:text-slate-600' : 'text-slate-600 dark:text-slate-400'}`}>
                     {day}
                   </div>
                 ))}
@@ -303,7 +307,7 @@ const CapacityCalculator: React.FC = () => {
                 return (
                   <div 
                     key={day} 
-                    className={`relative rounded-sm border ${isActiveDay ? 'bg-slate-900/50 border-slate-800' : 'bg-slate-950/30 border-transparent'}`}
+                    className={`relative rounded-sm border ${isActiveDay ? 'bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-800' : 'bg-slate-50 dark:bg-slate-950/30 border-transparent'}`}
                     style={{ height: `${totalContainerHeight}px` }}
                   >
                     {isActiveDay && (
@@ -311,7 +315,7 @@ const CapacityCalculator: React.FC = () => {
                         {Array.from({ length: visualBlockCount }).map((_, i) => (
                            <div 
                              key={i}
-                             className="w-full bg-cyan-600 border border-cyan-500 rounded-[1px] shadow-sm flex-shrink-0 opacity-80"
+                             className="w-full bg-cyan-500 dark:bg-cyan-600 border border-cyan-400 dark:border-cyan-500 rounded-[1px] shadow-sm flex-shrink-0 opacity-80"
                              style={{ height: `${Math.max(2, blockHeight - 2)}px` }}
                              title={`Meeting ${i+1}: ${inputs.minutesPerMeeting} mins`}
                            />
@@ -321,7 +325,7 @@ const CapacityCalculator: React.FC = () => {
                     
                     {!isActiveDay && (
                       <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-                         <div className="w-full h-[1px] bg-slate-700 rotate-45 transform scale-150"></div>
+                         <div className="w-full h-[1px] bg-slate-300 dark:bg-slate-700 rotate-45 transform scale-150"></div>
                       </div>
                     )}
                   </div>
@@ -331,7 +335,7 @@ const CapacityCalculator: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-4 text-[10px] text-slate-500 italic border-t border-slate-800 pt-2 ml-14">
+        <div className="mt-4 text-[10px] text-slate-400 dark:text-slate-500 italic border-t border-slate-200 dark:border-slate-800 pt-2 ml-14">
           *Visualization range: {formatTime(inputs.startHour)} to {formatTime(inputs.endHour)}. 
           Each block represents one {inputs.minutesPerMeeting}-minute meeting.
         </div>
@@ -342,26 +346,26 @@ const CapacityCalculator: React.FC = () => {
   if (!isLoaded) return <div className="p-10 text-center text-slate-500">Loading...</div>;
 
   return (
-    <div className="h-full flex flex-col bg-slate-900 overflow-hidden">
+    <div className="h-full flex flex-col bg-slate-50 dark:bg-slate-900 overflow-hidden transition-colors duration-300">
         {/* Header */}
-        <header className="bg-slate-900 border-b border-slate-700 py-4 px-6 flex justify-between items-center shrink-0 shadow-md z-10">
+        <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 py-4 px-6 flex justify-between items-center shrink-0 shadow-md z-10 transition-colors duration-300">
             <div className="flex items-center space-x-3">
-                <div className="bg-cyan-500/10 p-2 rounded-lg border border-cyan-500/50 shadow-[0_0_10px_rgba(34,211,238,0.2)]">
-                    <TrendingUp className="text-cyan-400 w-6 h-6" />
+                <div className="bg-cyan-50 dark:bg-cyan-500/10 p-2 rounded-lg border border-cyan-200 dark:border-cyan-500/50 shadow-sm dark:shadow-[0_0_10px_rgba(34,211,238,0.2)]">
+                    <TrendingUp className="text-cyan-600 dark:text-cyan-400 w-6 h-6" />
                 </div>
                 <div>
-                    <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+                    <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
                         Practice Capacity 
-                        <span className="text-[10px] align-top bg-cyan-900 text-cyan-200 px-1.5 py-0.5 rounded font-bold tracking-wider">TOOL</span>
+                        <span className="text-[10px] align-top bg-cyan-100 dark:bg-cyan-900 text-cyan-800 dark:text-cyan-200 px-1.5 py-0.5 rounded font-bold tracking-wider">TOOL</span>
                     </h1>
-                    <p className="text-xs text-slate-400">Model practice efficiency and client load</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Model practice efficiency and client load</p>
                 </div>
             </div>
             
             <div className="flex gap-2">
                <button 
                 onClick={handleReset}
-                className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-slate-400 bg-slate-800 border border-slate-700 rounded-lg hover:bg-slate-700 hover:text-slate-200 transition-colors"
+                className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
                >
                 <RotateCcw className="w-3 h-3" /> Reset
               </button>
@@ -374,8 +378,8 @@ const CapacityCalculator: React.FC = () => {
               {/* LEFT COLUMN: Controls */}
               <div className="lg:col-span-4 space-y-6">
                 <Card className="p-6">
-                  <div className="flex items-center gap-2 mb-6 text-slate-200 font-semibold border-b border-slate-700 pb-2">
-                    <Users className="w-5 h-5 text-cyan-400" />
+                  <div className="flex items-center gap-2 mb-6 text-slate-700 dark:text-slate-200 font-semibold border-b border-slate-200 dark:border-slate-700 pb-2">
+                    <Users className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
                     <span>Practice Variables</span>
                   </div>
 
@@ -404,10 +408,10 @@ const CapacityCalculator: React.FC = () => {
                     onChange={(v) => updateInput('minutesPerMeeting', v)} 
                   />
                   
-                  <div className="my-6 border-t border-slate-800"></div>
+                  <div className="my-6 border-t border-slate-200 dark:border-slate-800"></div>
                   
-                  <div className="flex items-center gap-2 mb-4 text-slate-200 font-semibold">
-                    <Clock className="w-5 h-5 text-cyan-400" />
+                  <div className="flex items-center gap-2 mb-4 text-slate-700 dark:text-slate-200 font-semibold">
+                    <Clock className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
                     <span>Time Constraints</span>
                   </div>
 
@@ -467,14 +471,14 @@ const CapacityCalculator: React.FC = () => {
                 <Card className="p-5 relative overflow-hidden">
                    <div className="flex justify-between items-start mb-4 relative z-10">
                      <div>
-                       <h3 className="text-lg font-bold text-slate-200">
+                       <h3 className="text-lg font-bold text-slate-900 dark:text-slate-200">
                          Meeting Capacity Load
                        </h3>
                        <div className="flex flex-col mt-2 gap-1">
-                          <div className="text-xs font-medium text-slate-400 bg-slate-900/50 px-2 py-1 rounded border border-slate-700 inline-block self-start">
-                            <span className="text-slate-200 font-bold">{Math.round((stats.totalMeetingsYear * inputs.minutesPerMeeting) / 60).toLocaleString()}</span> Client Mtg Hours
-                            <span className="mx-2 text-slate-600">/</span>
-                            <span className="text-slate-200 font-bold">{Math.round(stats.workDaysPerYear * inputs.hoursPerDay).toLocaleString()}</span> Total Work Hours
+                          <div className="text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-900/50 px-2 py-1 rounded border border-slate-200 dark:border-slate-700 inline-block self-start">
+                            <span className="text-slate-900 dark:text-slate-200 font-bold">{Math.round((stats.totalMeetingsYear * inputs.minutesPerMeeting) / 60).toLocaleString()}</span> Client Mtg Hours
+                            <span className="mx-2 text-slate-400 dark:text-slate-600">/</span>
+                            <span className="text-slate-900 dark:text-slate-200 font-bold">{Math.round(stats.workDaysPerYear * inputs.hoursPerDay).toLocaleString()}</span> Total Work Hours
                           </div>
                        </div>
                      </div>
@@ -483,24 +487,24 @@ const CapacityCalculator: React.FC = () => {
                      </div>
                    </div>
                    
-                   <div className="w-full bg-slate-900/50 rounded-full h-4 overflow-hidden mb-2 border border-slate-800">
+                   <div className="w-full bg-slate-200 dark:bg-slate-900/50 rounded-full h-4 overflow-hidden mb-2 border border-slate-300 dark:border-slate-800">
                      <div 
                         className={`h-full transition-all duration-500 ${getBarColor(stats.capacityPercentage)}`}
                         style={{ width: `${Math.min(stats.capacityPercentage, 100)}%` }}
                      ></div>
                    </div>
                    
-                   <div className="flex justify-between text-[10px] text-slate-500 font-mono uppercase tracking-wide">
+                   <div className="flex justify-between text-[10px] text-slate-400 dark:text-slate-500 font-mono uppercase tracking-wide">
                       <span>0% (Empty Practice)</span>
                       <span>50% (Balanced)</span>
                       <span>100% (Burnout)</span>
                    </div>
 
                    {stats.capacityPercentage > 80 && (
-                     <div className="mt-4 flex gap-3 items-start p-3 bg-rose-950/20 text-rose-300 text-sm rounded-lg border border-rose-900/50">
-                       <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-rose-400" />
+                     <div className="mt-4 flex gap-3 items-start p-3 bg-rose-50 dark:bg-rose-950/20 text-rose-700 dark:text-rose-300 text-sm rounded-lg border border-rose-200 dark:border-rose-900/50">
+                       <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-rose-500 dark:text-rose-400" />
                        <div>
-                         <strong className="block mb-0.5 text-rose-200">High Capacity Warning</strong>
+                         <strong className="block mb-0.5 text-rose-900 dark:text-rose-200">High Capacity Warning</strong>
                          You are spending over 80% of your available work hours in meetings. This leaves little time for research, admin, or business development.
                        </div>
                      </div>
@@ -508,10 +512,10 @@ const CapacityCalculator: React.FC = () => {
                 </Card>
 
                 {/* Strategy Notes */}
-                <Card className="p-4 bg-cyan-950/10 border-cyan-900/30">
+                <Card className="p-4 bg-cyan-50 dark:bg-cyan-950/10 border-cyan-100 dark:border-cyan-900/30">
                      <div className="flex justify-between items-center mb-3">
-                       <div className="flex items-center gap-2 text-slate-200 font-semibold">
-                          <Briefcase className="w-4 h-4 text-cyan-400" />
+                       <div className="flex items-center gap-2 text-slate-700 dark:text-slate-200 font-semibold">
+                          <Briefcase className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                           <span className="text-sm">Strategy Notes</span>
                        </div>
                        <button
@@ -519,7 +523,7 @@ const CapacityCalculator: React.FC = () => {
                         className={`flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded-md transition-all duration-200 ${
                           saveSuccess 
                             ? 'bg-emerald-600 text-white shadow-sm' 
-                            : 'bg-slate-800 text-cyan-400 border border-slate-700 hover:bg-slate-700'
+                            : 'bg-white dark:bg-slate-800 text-cyan-600 dark:text-cyan-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
                         }`}
                       >
                         {saveSuccess ? (
@@ -536,7 +540,7 @@ const CapacityCalculator: React.FC = () => {
                       </button>
                       </div>
                       <textarea 
-                        className="w-full p-3 bg-slate-900/50 border border-slate-700 rounded-lg text-sm text-slate-300 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-cyan-500/50 min-h-[80px]"
+                        className="w-full p-3 bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-cyan-500/50 min-h-[80px]"
                         placeholder="Type your capacity planning notes here..."
                         value={inputs.notes}
                         onChange={(e) => updateInput('notes', e.target.value)}
@@ -547,40 +551,40 @@ const CapacityCalculator: React.FC = () => {
                 <Card className="p-6">
                   <div className="flex flex-col md:flex-row gap-8">
                     <div className="flex-1">
-                       <h3 className="text-lg font-bold text-slate-200 mb-4">Calculated Work Schedule</h3>
+                       <h3 className="text-lg font-bold text-slate-900 dark:text-slate-200 mb-4">Calculated Work Schedule</h3>
                        <ul className="space-y-3 text-sm">
-                         <li className="flex justify-between p-3 bg-slate-800/50 rounded border border-slate-700">
-                           <span className="text-slate-400">Work Days / Year</span>
-                           <span className="font-bold text-slate-200">{stats.workDaysPerYear}</span>
+                         <li className="flex justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded border border-slate-100 dark:border-slate-700">
+                           <span className="text-slate-500 dark:text-slate-400">Work Days / Year</span>
+                           <span className="font-bold text-slate-900 dark:text-slate-200">{stats.workDaysPerYear}</span>
                          </li>
-                         <li className="flex justify-between p-3 bg-slate-800/50 rounded border border-slate-700">
-                           <span className="text-slate-400">Work Hours / Day</span>
-                           <span className="font-bold text-slate-200">{inputs.hoursPerDay} hrs</span>
+                         <li className="flex justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded border border-slate-100 dark:border-slate-700">
+                           <span className="text-slate-500 dark:text-slate-400">Work Hours / Day</span>
+                           <span className="font-bold text-slate-900 dark:text-slate-200">{inputs.hoursPerDay} hrs</span>
                          </li>
-                         <li className="flex justify-between p-3 bg-slate-800/50 rounded border border-slate-700">
-                           <span className="text-slate-400">Meeting Hours / Day</span>
-                           <span className="font-bold text-slate-200">{((stats.meetingsPerDay * inputs.minutesPerMeeting)/60).toFixed(1)} hrs</span>
+                         <li className="flex justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded border border-slate-100 dark:border-slate-700">
+                           <span className="text-slate-500 dark:text-slate-400">Meeting Hours / Day</span>
+                           <span className="font-bold text-slate-900 dark:text-slate-200">{((stats.meetingsPerDay * inputs.minutesPerMeeting)/60).toFixed(1)} hrs</span>
                          </li>
-                         <li className="flex justify-between p-3 bg-slate-800/50 rounded border border-slate-700">
-                           <span className="text-slate-400">Meeting Hours / Week</span>
-                           <span className="font-bold text-slate-200">{((stats.meetingsPerWeek * inputs.minutesPerMeeting)/60).toFixed(1)} hrs</span>
+                         <li className="flex justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded border border-slate-100 dark:border-slate-700">
+                           <span className="text-slate-500 dark:text-slate-400">Meeting Hours / Week</span>
+                           <span className="font-bold text-slate-900 dark:text-slate-200">{((stats.meetingsPerWeek * inputs.minutesPerMeeting)/60).toFixed(1)} hrs</span>
                          </li>
-                         <li className="flex justify-between p-3 bg-slate-800/50 rounded border border-slate-700">
-                           <span className="text-slate-400">Admin/Free Hours / Week</span>
-                           <span className="font-bold text-slate-200">
+                         <li className="flex justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded border border-slate-100 dark:border-slate-700">
+                           <span className="text-slate-500 dark:text-slate-400">Admin/Free Hours / Week</span>
+                           <span className="font-bold text-slate-900 dark:text-slate-200">
                              {Math.max(0, (inputs.workDaysPerWeek * inputs.hoursPerDay) - ((stats.meetingsPerWeek * inputs.minutesPerMeeting)/60)).toFixed(1)} hrs
                            </span>
                          </li>
-                         <li className="flex justify-between p-3 bg-cyan-950/20 rounded border border-cyan-900/30">
-                           <span className="flex items-center gap-2 text-cyan-400">
+                         <li className="flex justify-between p-3 bg-cyan-50 dark:bg-cyan-950/20 rounded border border-cyan-100 dark:border-cyan-900/30">
+                           <span className="flex items-center gap-2 text-cyan-700 dark:text-cyan-400">
                              <Palmtree className="w-4 h-4" />
                              Implied PTO
                            </span>
-                           <span className="font-bold text-cyan-100">{stats.ptoWeeks} weeks / year</span>
+                           <span className="font-bold text-cyan-900 dark:text-cyan-100">{stats.ptoWeeks} weeks / year</span>
                          </li>
                        </ul>
                     </div>
-                    <div className="flex-1 border-l border-slate-800 pl-0 md:pl-8 pt-4 md:pt-0">
+                    <div className="flex-1 border-l border-slate-200 dark:border-slate-800 pl-0 md:pl-8 pt-4 md:pt-0">
                       <WeekVisual />
                     </div>
                   </div>

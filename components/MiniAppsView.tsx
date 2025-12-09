@@ -13,11 +13,11 @@ const MiniAppsView: React.FC = () => {
         <button
             onClick={() => setActiveApp(id)}
             className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors border-l-2 ${activeApp === id
-                ? 'border-accent-gold bg-slate-800 text-white'
-                : 'border-transparent text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
+                ? 'border-accent-gold bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white'
+                : 'border-transparent text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
         >
-            <Icon size={18} className={activeApp === id ? 'text-accent-gold' : 'text-slate-500'} />
+            <Icon size={18} className={activeApp === id ? 'text-accent-gold' : 'text-slate-400 dark:text-slate-500'} />
             <span className="font-medium text-sm">{label}</span>
         </button>
     );
@@ -25,9 +25,9 @@ const MiniAppsView: React.FC = () => {
     return (
         <div className="flex h-full animate-fade-in">
             {/* Left Sidebar */}
-            <aside className="w-64 bg-slate-950 border-r border-slate-800 flex flex-col pt-6 z-10 shrink-0">
+            <aside className="w-64 bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 flex flex-col pt-6 z-10 shrink-0 transition-colors duration-300">
                 <div className="px-6 mb-6">
-                    <h2 className="text-xs uppercase font-bold text-slate-500 font-heading tracking-wider">Mini Applications</h2>
+                    <h2 className="text-xs uppercase font-bold text-slate-400 dark:text-slate-500 font-heading tracking-wider">Mini Applications</h2>
                 </div>
                 <nav className="flex-1 space-y-1">
                     <NavButton id="goals" label="Goal Designer" icon={Target} />
@@ -37,7 +37,7 @@ const MiniAppsView: React.FC = () => {
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 overflow-hidden bg-slate-900/50 relative">
+            <main className="flex-1 overflow-hidden bg-slate-50 dark:bg-slate-900/50 relative transition-colors duration-300">
                 {activeApp === 'goals' && (
                     <div className="h-full overflow-y-auto">
                         <GoalDesignerView />
