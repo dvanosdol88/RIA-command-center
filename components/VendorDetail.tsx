@@ -56,9 +56,7 @@ const VendorDetail: React.FC<VendorDetailProps> = ({ vendor, weights, onBack }) 
     });
 
     // Persistent Notes State
-    const [notes, setNotes] = useState(() => {
-        return localStorage.getItem(`vendor_notes_${vendor.name}`) || '';
-    });
+    const [notes, setNotes] = useState('');
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
     // AI Insight State

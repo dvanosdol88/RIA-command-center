@@ -10,19 +10,20 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Initialize theme from localStorage or system preference
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      const savedTheme = window.localStorage.getItem('theme') as Theme;
-      if (savedTheme) {
-        return savedTheme;
-      }
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'dark';
-      }
+  // Default to 'dark' to match server-render and avoid hydration mismatch.
+  const [theme, setTheme] = useState<Theme>('dark');
+
+  useEffect(() => {
+    // This effect runs only on the client, after hydration.
+    const savedTheme = window.localStorage.getItem('theme') as Theme;
+    if (savedTheme) {
+      setTheme(savedTheme);
+    } else {
+      // Fallback to system preference if no theme is saved
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(systemPrefersDark ? 'dark' : 'light');
     }
-    return 'dark'; // Default to dark for this app
-  });
+  }, []); // Empty dependency array ensures this runs only once on mount.
 
   useEffect(() => {
     const root = window.document.documentElement;
