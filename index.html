@@ -1,10 +1,42 @@
-<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="en">
   <head>
-    <title>Redirecting...</title>
-    <meta http-equiv="refresh" content="0;url=./dvo88-landing.html" />
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/dollar-favicon-transparent-RIA.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dvo88.com | Experience Anti-Gravity</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CDN for Landing Page styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Source Sans 3"', 'sans-serif'],
+                        heading: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        'evergreen': {
+                            DEFAULT: '#006044',
+                            light: '#007050',
+                            dark: '#004a35'
+                        },
+                        'accent-green': '#76a923',
+                        'accent-gold': '#af8a49',
+                        'brand-black': '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
   </head>
   <body>
-    <p>If you are not redirected automatically, follow this <a href="./dvo88-landing.html">link</a>.</p>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>
