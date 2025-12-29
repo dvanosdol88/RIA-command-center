@@ -205,7 +205,7 @@ const LandingPage: React.FC = () => {
                   <a href="#" className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-lime-500 transition-colors">Client Onboarding</a>
                   {/* CHANGED LINK HERE */}
                   <a href="#/calculator" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-lime-500 transition-colors">Capacity Calculator</a>
-                  <a href="https://672elmstreet.com" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-lime-500 transition-colors">672elmstreet.com</a>
+                  <a href="https://672elmstreet.com" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-lime-500 transition-colors">672elmstreet.com</a> <a href="https://riabuilder.dvo88.com" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-lime-500 transition-colors">RIA Builder</a>
               </nav>
 
               <div className="flex items-center gap-4">
